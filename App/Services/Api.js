@@ -6,7 +6,7 @@ const headers = {
 }
 
 const create = (baseURL = 'https://api.openweathermap.org/data/2.5/') => {
-  const api_key = 'secret'
+  const api_key = 'd11a2997022368072b1ddfdfac5be0ce'
   const api = apisauce.create({
     baseURL,
     headers,
