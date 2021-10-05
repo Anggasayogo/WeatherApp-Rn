@@ -107,3 +107,7 @@ App
 | ![screenshots1](dist/open1.png) | ![screenshots2](dist/open2.png) | |     |
 |                                          |                                          |                                          |     |
 |                                          |                                          |                                          |     |
+
+## Download Apk Release on folder
+```
+dist/apk/app-release.apk
