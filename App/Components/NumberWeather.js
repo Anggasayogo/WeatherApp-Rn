@@ -9,7 +9,7 @@ import { apply } from '../Themes/OsmiProvider'
 const NumberWeather = props => {
   return (
     <View style={styles.container}>
-      <Text style={styles.number}>30</Text>
+      <Text style={styles.number}>{props.number}</Text>
       <View style={styles.circle}/>
     </View>
   )

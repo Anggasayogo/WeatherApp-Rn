@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { connect } from 'react-redux'
+import WeatherAction from '../Redux/WeatherRedux'
 import { StatusBar, Image, View, Text, FlatList } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Images from '../Images'
@@ -13,6 +14,7 @@ import styles from './Styles/LaunchScreenStyle'
 import { apply } from '../Themes/OsmiProvider'
 
 const LaunchScreen = props => {
+  const { weather } = props
   const _navigateExplore = useCallback(() => props.navigation.navigate("WelcomeScreen"), [])
   const data = [
     {
@@ -37,6 +39,10 @@ const LaunchScreen = props => {
     }
   ]
 
+  useEffect(()=>{
+    props.getWeather('jakarta')
+  },[])
+
   const RenderState = (item) => {
     return(
       <View style={apply("mx-5")}>
@@ -60,27 +66,27 @@ const LaunchScreen = props => {
         </View>
         <View style={styles.wrraperCelciusState}>
           <View style={apply("row items-center flex")}>
-            <NumberWeather/>
-            <Text style={styles.textState}>| Party Cloudy</Text>
+            <NumberWeather number={weather?.data?.clouds?.all}/>
+            <Text style={styles.textState}>| {weather?.data?.weather[0]?.description}</Text>
           </View>
-          <Image source={Images.icCerahBerawan} style={apply("w-80 h-77 mr-3")}/>
+          <Image source={{uri: `http://openweathermap.org/img/w/${weather?.data?.weather[0]?.icon}.png`}} style={apply("w-90 h-80 mr-3")}/>
         </View>
         <View style={apply('mt-3')}>
-          <Text style={apply("text-xl font-semiBold my-2")}>Howdy, Alver</Text>
+          <Text style={apply("text-xl font-semiBold my-2")}>Howdy, Angga Maulana</Text>
           <Text style={apply("text-xs font-regular")}>South Jakarta, Indonesia</Text>
         </View>
         <View style={apply("row items-center my-5")}>
           <View style={apply("mt-3 items-center")}>
-            <Text style={apply("text-base font-semiBold")}>61%</Text>
+            <Text style={apply("text-base font-semiBold")}>{weather?.data?.main?.humidity}%</Text>
             <Text style={apply('font-regular text-xs mt-1')}>Humidity</Text>
           </View>
           <View style={apply("mt-3 items-center flex")}>
-            <Text style={apply("text-base font-semiBold")}>11</Text>
-            <Text style={apply('font-regular text-xs mt-1')}>UV Index</Text>
+            <Text style={apply("text-base font-semiBold")}>{weather?.data?.main?.feels_like}</Text>
+            <Text style={apply('font-regular text-xs mt-1')}>Feels Like</Text>
           </View>
           <View style={apply("mt-3 items-center")}>
-            <Text style={apply("text-base font-semiBold")}>E 8 kmh</Text>
-            <Text style={apply('font-regular text-xs mt-1')}>Wind</Text>
+            <Text style={apply("text-base font-semiBold")}>{weather?.data?.main?.pressure} kmh</Text>
+            <Text style={apply('font-regular text-xs mt-1')}>Wind Speed</Text>
           </View>
         </View>
       </View>
@@ -119,11 +125,11 @@ const LaunchScreen = props => {
 }
 
 const mapStateToProps = state => ({
-
+  weather: state.weather.weatherModule
 })
 
 const mapDispatchToProps = dispatch => ({
-
+  getWeather: (value) => dispatch(WeatherAction.weatherRequest(value))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)

@@ -6,22 +6,22 @@ import DebugConfig from '../Config/DebugConfig'
 /* ------------- Types ------------- */
 import { StartupTypes } from '../Redux/StartupRedux'
 import { StaticDataTypes } from '../Redux/StaticDataRedux'
+import { WeatherTypes } from '../Redux/WeatherRedux'
 
 /* ------------- Sagas ------------- */
 import { startup } from './StartupSagas'
 import { getRoot } from './StaticDataSagas'
+import { getWeather, getWeatherbyDay } from './WeatherSagas'
 
 /* ------------- API ------------- */
-// The API we use is only used from Sagas, so we create it here and pass along
-// to the sagas which need it.
 const api = DebugConfig.useFixtures ? FixtureAPI : API.create()
 
 /* ------------- Connect Types To Sagas ------------- */
 export default function * root () {
   yield all([
-    // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
-
+    takeLatest(WeatherTypes.WEATHER_REQUEST, getWeather, api),
+    takeLatest(WeatherTypes.GET_WEATHER_LET_REQUEST, getWeatherbyDay, api),
     takeLatest(StaticDataTypes.GET_ROOT_REQUEST, getRoot, api)
   ])
 }
